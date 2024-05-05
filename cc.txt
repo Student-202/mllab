@@ -1,0 +1,77 @@
+Step 1: Create a text file “D:/data.txt”
+Step 2: Create a directory in HDFS, where to kept text file....hdfs dfs -mkdir /user
+Step 3: Upload the data.txt file on HDFS in the specific directory
+hdfs dfs -put D:/data.txt /user
+Step 4: List the files or directories in hdfs
+hdfs dfs -ls /user/
+Step 5: To view the content of the file “/user/data.txt”
+hdfs dfs -cat /user/data.txt
+Step 6: Run the jar file
+hadoop jar D:/hadoop-env/hadoop-3.2.2/share/hadoop/mapreduce/hadoopmapreduce-examples-3.2.2.jar wordcount /user /out
+Step 7: To view the output in “/out/*”
+hadoop fs -cat /out/*
+
+
+Openstack:
+
+Step 1: Switch to “root” user
+user@vmub-hadoop1:~$ sudo su -
+root@vmub-hadoop1:~# sudo apt-get update
+Step 2: Install “git” and logout from “root user”
+root@vmub-hadoop1:~# sudo apt-get install git
+root@vmub-hadoop1:~# exit
+logout
+user@vmub-hadoop1:~$
+Step 3: Create/Add a user “stack” with “no password”
+user@vmub-hadoop1:~$ sudo useradd -s /bin/bash -d /opt/stack -m stack
+user@vmub-hadoop1:~$ echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee
+/etc/sudoers.d/stack
+stack ALL=(ALL) NOPASSWD: ALL
+Step 4: Move to “stack” user
+user@vmub-hadoop1:~$ sudo su - stack
+Step 5: Clone the “devstack” from the specified link
+stack@vmub-hadoop1:~$ git clone https://github.com/openstack-dev/devstack
+Cloning into 'devstack'...
+remote: Enumerating objects: 49330, done.
+remote: Counting objects: 100% (2556/2556), done.
+remote: Compressing objects: 100% (836/836), done.
+remote: Total 49330 (delta 1831), reused 2226 (delta 1709), pack-reused 46774
+Receiving objects: 100% (49330/49330), 15.56 MiB | 2.33 MiB/s, done.
+Resolving deltas: 100% (34462/34462), done.
+Checking connectivity... done.
+Step 6: Move to “/devstack/samples”
+stack@vmub-hadoop1:~$ cd devstack
+stack@vmub-hadoop1:~/devstack$ ls
+clean.sh doc functions gate lib openrc roles stackrc tools
+CONTRIBUTING.rst extras.d functions-common HACKING.rst LICENSE playbooks
+run_tests.sh stack.sh tox.ini
+data files FUTURE.rst inc Makefile README.rst samples tests
+unstack.sh
+stack@vmub-hadoop1:~/devstack$ cd samples
+stack@vmub-hadoop1:~/devstack/samples$ ls
+local.conf local.sh
+Step 7: Copy “local.conf” file to “devstack”
+stack@vmub-hadoop1:~/devstack/samples$ cp local.conf ../
+stack@vmub-hadoop1:~/devstack/samples$ cd ..
+stack@vmub-hadoop1:~/devstack$ ls
+clean.sh doc functions gate lib Makefile README.rst samples
+tests unstack.sh
+CONTRIBUTING.rst extras.d functions-common HACKING.rst LICENSE openrc
+roles stackrc tools
+data files FUTURE.rst inc local.conf playbooks run_tests.sh
+stack.sh tox.ini
+Step 8: Open “local.conf” and edit the lines
+stack@vmub-hadoop1:~/devstack$ nano local.conf
+ADMIN_PASSWORD=p1
+DATABASE_PASSWORD=p1
+RABBIT_PASSWORD=p1
+SERVICE_PASSWORD=p1
+HOST_IP=10.0.2.4
+FLOATING_RANGE=10.0.2.224/27
+Step 9: Remove the following files to Lock the error
+stack@vmub-hadoop1:~/devstack$ sudo rm /var/lib/dpkg/lock
+stack@vmub-hadoop1:~/devstack$ sudo rm /var/lib/apt/lists/lock
+stack@vmub-hadoop1:~/devstack$ sudo rm /var/cache/apt/archives/lock
+stack@vmub-hadoop1:~/devstack$ sudo rm -rf /var/lib/apt/lists/*
+Step 10: To install stack
+stack@vmub-hadoop1:~/devstack$ FORCE=yes ./stack.sh 
